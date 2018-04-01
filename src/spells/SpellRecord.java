@@ -27,4 +27,13 @@ public class SpellRecord {
         return levels.get(levels.size() - 1);
     }
 
+    public SpellRecord getSpellRecord(int id){
+        for(int i = 0 ; i < spells.size() ; i++){
+            if(spells.get(i).id == id){
+                return spells.get(i);
+            }
+        }
+        return null;
+    }
+
 }
