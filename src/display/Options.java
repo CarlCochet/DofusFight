@@ -41,12 +41,21 @@ public class Options extends JPanel implements ItemListener {
 
         this.add(button);
 
-        button = new JButton(new GenerateMap());
+        button = new JButton(new PossibleMoves());
         button.setFont(new Font("Arial", Font.PLAIN, fontSize));
         button.setSize(buttonWidth,buttonHeight);
         button.setLocation(0,100);
 
         this.add(button);
+
+        button = new JButton(new GenerateMap());
+        button.setFont(new Font("Arial", Font.PLAIN, fontSize));
+        button.setSize(buttonWidth,buttonHeight);
+        button.setLocation(0,150);
+
+        this.add(button);
+
+
     }
 
     @Override

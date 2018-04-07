@@ -4,7 +4,6 @@ import enums.DirectionsEnum;
 import enums.EffectsEnum;
 import enums.TriggerType;
 import items.EffectGenerationProvider;
-import javafx.scene.effect.Effect;
 import maps.shapes.Zone;
 
 import java.util.Random;
@@ -37,8 +36,22 @@ public class EffectInstance {
     }
 
     public Effect generateEffect(boolean perfect){
-        if(EffectGenerationProvider.isHandled(effectId)){
-
+        /*if(EffectGenerationProvider.isHandled(effectId)){
+            Effect effect = EffectGenerationProvider.handle(this);
+        }*/
+        if(diceMin > 0 && diceMax == 0){
+            return new EffectInteger(effectId, diceMin);
+        }
+        if(value > 0){
+            new EffectInteger(effectId, value);
+        }
+        if(diceMin != 0 && diceMin < diceMax){
+            if(!perfect) {
+                int value = new Random().nextInt(diceMax - diceMin) + diceMin;
+                return new EffectInteger(effectId, value);
+            } else {
+                return new EffectInteger(effectId, diceMax);
+            }
         }
         return null;
     }

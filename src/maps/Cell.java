@@ -7,6 +7,7 @@ public class Cell {
     private int y;
     private int celltype;
     private boolean targeted;
+    private boolean possibleMove;
 
     public Cell(int x, int y, int celltype, int cellId){
         this.cellId = cellId;
@@ -46,5 +47,25 @@ public class Cell {
 
     public void setTargeted(boolean targeted) {
         this.targeted = targeted;
+    }
+
+    public int getCellId() {
+        return cellId;
+    }
+
+    public void setCellId(int cellId) {
+        this.cellId = cellId;
+    }
+
+    public boolean isTargeted() {
+        return targeted;
+    }
+
+    public boolean getPossibleMove() {
+        return possibleMove;
+    }
+
+    public void setPossibleMove(boolean possibleMove) {
+        this.possibleMove = possibleMove;
     }
 }

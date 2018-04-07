@@ -24,9 +24,14 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
 
     private int mode;
 
+    private int maxPO;
+    private int maxPM;
+
     private int[] start;
     private int[] end;
     private Path path;
+
+    private List<int[]> possibleMoves = new ArrayList<>();
 
     public Panel(int width, int height) {
         this.mode = 0;
@@ -35,6 +40,8 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
         this.setPreferredSize(new Dimension(this.width, this.height));
         this.map = new Map();
         this.start = new int[2];
+        this.maxPO = 10;
+        this.maxPM = 6;
         start[0] = 15;
         start[1] = 15;
         this.end = new int[2];
@@ -61,9 +68,12 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
                     g2d.setColor(new Color(128, 128, 128));
                 } else if (map.getCells()[i][k].getCelltype() == 1){
                     g2d.setColor(new Color(0, 0, 0));
-                } else if(map.getCells()[i][k].getTargeted()){
+                } else if(map.getCells()[i][k].getTargeted() && this.mode == 0){
                     g2d.setColor(new Color(66, 192, 255));
                     map.getCells()[i][k].setTargeted(false);
+                } else if(map.getCells()[i][k].getPossibleMove() && this.mode == 2){
+                    g2d.setColor(new Color(60,255,60));
+                    map.getCells()[i][k].setPossibleMove(false);
                 } else {
                     g2d.setColor(new Color(255, 255, 255));
                 }
@@ -87,6 +97,12 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
 
                 }
             }
+        }
+        if(this.mode == 2){
+            g2d.setColor(new Color(255, 0, 0));
+            g2d.fillRect(start[0] * cellSize + 1, start[1] * cellSize + 1, cellSize - 1, cellSize - 1);
+            g2d.setColor(new Color(60,255,60));
+
         }
         g2d.dispose();
     }
@@ -133,21 +149,25 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
         if(this.mode == 0) {
             for (int a = 0; a < map.getCells().length; a++) {
                 for (int b = 0; b < map.getCells()[0].length; b++) {
-                    map.getCells()[a][b].setTargeted(map.visibility(x, y, a, b, 10));
+                    map.getCells()[a][b].setTargeted(map.visibility(x, y, a, b, this.maxPO));
                 }
             }
         } else if(this.mode == 1){
             this.end[0] = x;
             this.end[1] = y;
-            if(map.getCells()[start[0]][start[1]].getCelltype() > 1) {
-                this.setPath(new Path(new int[]{1, 1}, new int[]{x, y}));
-                this.getPath().setCases(new ArrayList<int[]>());
-                PathFinder.pathFind(map.getCells().length, map.getCells()[0].length, start[0], start[1], x, y, this.getMap().getBlock());
-                if (this.getPath().getCases().size() <= 2000) {
-                    System.out.println(this.getPath().getCases().size());
-                    this.repaint();
-                } else {
-                    this.setPath(new Path(new int[]{5, 5}, new int[]{x, y}));
+            if(map.getCells()[start[0]][start[1]].getCelltype() > 1 && (Math.abs(end[0]-start[0])+Math.abs(end[1]-start[1])) <= this.maxPM) {
+                calculatePath(start[0], start[1], end[0], end[1], this.maxPM);
+            }
+        } else if(this.mode == 2){ // This mode gets all cells reachable from 1 point with a given amount of PM
+            this.start[0] = x;
+            this.start[1] = y;
+            for(int i = -this.maxPM ; i <= this.maxPM ; i++){
+                for(int k = -this.maxPM ; k <= this.maxPM ; k++){
+                    this.end[0] = x + i;
+                    this.end[1] = y + k;
+                    if(x + i >= 0 && x + i < 34 && y + k >= 0 && y + k < 34) { // Checking it's not out of the map
+                        map.getCells()[end[0]][end[1]].setPossibleMove(calculatePath(start[0], start[1], end[0], end[1], this.maxPM));
+                    }
                 }
             }
         }
@@ -219,4 +239,23 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
     public void setPath(Path path) {
         this.path = path;
     }
+
+    public boolean calculatePath(int x1, int y1, int x2, int y2, int maxLength){
+        if(map.getCells()[x1][y1].getCelltype() > 1 && (Math.abs(x2-x1)+Math.abs(y2-y1)) <= maxLength) {
+            this.setPath(new Path(new int[]{1, 1}, new int[]{x2, y2}));
+            this.getPath().setCases(new ArrayList<int[]>());
+            PathFinder.pathFind(map.getCells().length, map.getCells()[0].length, x1, y1, x2, y2, this.getMap().getBlock());
+            if (this.getPath().getCases().size() <= maxLength) {
+                System.out.println(this.getPath().getCases().size());
+                this.repaint();
+                return true;
+            } else {
+                this.setPath(new Path(new int[]{5, 5}, new int[]{-1, -1}));
+                return false;
+            }
+
+        }
+        return false;
+    }
+
 }

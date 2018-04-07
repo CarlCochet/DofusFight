@@ -12,4 +12,10 @@ public class ObjectEffect {
     public ObjectEffect(){
 
     }
+
+    public ObjectEffect(int actionId){
+        this.actionId = actionId;
+    }
+
+
 }

@@ -14,8 +14,8 @@ public class Extensions<T> {
         return (int)(((double)current / (double)length) * (double)100);
     }
 
-    public static long percentage(long current, long length){
-        return (long)(((double)current / (double)length) * (double)100);
+    public static long percentage(long current, long length) {
+        return (long) (((double) current / (double) length) * (double) 100);
     }
 
 }
