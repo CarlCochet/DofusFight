@@ -10,6 +10,7 @@ public class Map {
 
     private static int sizeX = 34;
     private static int sizeY = 34;
+
     private Cell[][] cells;
 
     private int[][] block;
@@ -28,13 +29,13 @@ public class Map {
         for(int i = 0  ; i < sizeX ; i++){
             for(int k = 0 ; k < sizeY ; k++){
                 if( (i + k) < 13 || (i + k) > 53 || (i - k) > 13 || (k - i) > 13){
-                    cells[i][k] = new Cell(i, k, 1, -1);
+                    cells[i][k] = new Cell(i, k, 1, -1, false, false);
                     count++;
                     this.blocks.add(new int[]{i, k});
                 } else {
                     Random rand = new Random();
                     randint = rand.nextInt(20);
-                    cells[i][k] = new Cell(i, k, randint > 1 ? 2 : randint, countId);
+                    cells[i][k] = new Cell(i, k, randint > 1 ? 2 : randint, countId, false, false);
                     if (randint < 2) {
                         count++;
                         this.blocks.add(new int[]{i, k});
@@ -43,6 +44,7 @@ public class Map {
                 }
             }
         }
+        generatePlacements();
         block=new int[count][2];
         for(int i=0;i<count;i++){
             block[i]=new int[]{blocks.get(i)[0],blocks.get(i)[1]};
@@ -105,6 +107,25 @@ public class Map {
         return clear;
     }
 
+    public void generatePlacements(){
+        int numPlaceCells = (new Random().nextInt(8) + 8) * 2;
+        int currentNum = 0;
+        while(currentNum < numPlaceCells){
+            int x = new Random().nextInt(33);
+            int y = new Random().nextInt(33);
+            if(cells[x][y].getCelltype() == 2){
+                if(currentNum < numPlaceCells/2){
+                    cells[x][y].setBlue(true);
+                    currentNum++;
+                } else {
+                    cells[x][y].setRed(true);
+                    currentNum++;
+                }
+            }
+        }
+
+    }
+
     public static int getSizeX() {
         return sizeX;
     }
@@ -144,4 +165,5 @@ public class Map {
     public void setBlocks(List<int[]> blocks) {
         this.blocks = blocks;
     }
+
 }

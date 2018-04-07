@@ -18,7 +18,7 @@ public class Options extends JPanel implements ItemListener {
         this.height = height;
         this.setPreferredSize(new Dimension(width, height));
         this.setBackground(new Color(0,0,0));
-        this.fontSize = 20;
+        this.fontSize = 16;
         this.buttonWidth = 200;
         this.buttonHeight = 50;
         initComponents();

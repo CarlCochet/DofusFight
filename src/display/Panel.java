@@ -71,9 +71,13 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
                 } else if(map.getCells()[i][k].getTargeted() && this.mode == 0){
                     g2d.setColor(new Color(66, 192, 255));
                     map.getCells()[i][k].setTargeted(false);
-                } else if(map.getCells()[i][k].getPossibleMove() && this.mode == 2){
-                    g2d.setColor(new Color(60,255,60));
+                } else if(map.getCells()[i][k].getPossibleMove() && this.mode == 2) {
+                    g2d.setColor(new Color(60, 255, 60));
                     map.getCells()[i][k].setPossibleMove(false);
+                } else if(map.getCells()[i][k].isBlue()){
+                    g2d.setColor(new Color(29, 0, 255));
+                } else if(map.getCells()[i][k].isRed()) {
+                    g2d.setColor(new Color(255, 0, 8));
                 } else {
                     g2d.setColor(new Color(255, 255, 255));
                 }
@@ -81,7 +85,7 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
             }
         }
         if(this.mode == 1){
-            g2d.setColor(new Color(255, 0, 0));
+            g2d.setColor(new Color(255, 243, 0));
             g2d.fillRect(start[0] * cellSize + 1, start[1] * cellSize + 1, cellSize - 1, cellSize - 1);
             g2d.setColor(new Color(60,255,60));
             if(this.getPath() != null) {
@@ -99,7 +103,7 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
             }
         }
         if(this.mode == 2){
-            g2d.setColor(new Color(255, 0, 0));
+            g2d.setColor(new Color(255, 243, 0));
             g2d.fillRect(start[0] * cellSize + 1, start[1] * cellSize + 1, cellSize - 1, cellSize - 1);
             g2d.setColor(new Color(60,255,60));
 

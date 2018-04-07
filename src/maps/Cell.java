@@ -8,13 +8,17 @@ public class Cell {
     private int celltype;
     private boolean targeted;
     private boolean possibleMove;
+    private boolean blue;
+    private boolean red;
 
-    public Cell(int x, int y, int celltype, int cellId){
+    public Cell(int x, int y, int celltype, int cellId, boolean blue, boolean red){
         this.cellId = cellId;
         this.x = x;
         this.y = y;
         this.celltype = celltype;
         this.targeted = false;
+        this.blue = blue;
+        this.red = red;
     }
 
     public int getX() {
@@ -67,5 +71,21 @@ public class Cell {
 
     public void setPossibleMove(boolean possibleMove) {
         this.possibleMove = possibleMove;
+    }
+
+    public boolean isBlue() {
+        return blue;
+    }
+
+    public void setBlue(boolean blue) {
+        this.blue = blue;
+    }
+
+    public boolean isRed() {
+        return red;
+    }
+
+    public void setRed(boolean red) {
+        this.red = red;
     }
 }
