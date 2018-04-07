@@ -96,8 +96,19 @@ public class Cross implements IShape{
             }
         }
         MapPoint mapPoint = new MapPoint(centerCell);
+        for(int i = this.radius ; i > 0 ; i--){
+            if(i >= this.minRadius){
+                if(!this.diagonal){
+                    if(!list2.contains(DirectionsEnum.DIRECTION_SOUTH_EAST)){
+                        MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY(), map, list);
+                    }
+                }
+            }
+        }
         return new int[0];
     }
+
+
 
     public boolean isDiagonal() {
         return diagonal;

@@ -9,4 +9,6 @@ public enum DirectionsEnum {
     DIRECTION_NORTH_WEST,
     DIRECTION_NORTH,
     DIRECTION_NORTH_EAST,
+
+
 }
