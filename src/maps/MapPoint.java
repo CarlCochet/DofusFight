@@ -248,6 +248,39 @@ public class MapPoint{
         return points;
     }
 
+    public List<MapPoint> getCellsInLine(MapPoint destination){
+        List<MapPoint> points = new ArrayList<>();
+
+        int num0 = Math.abs(destination.x - this.x);
+        int num1 = Math.abs(destination.y - this.y);
+
+        int x = this.x;
+        int y = this.y;
+
+        int num4 = 1 + num0 + num1;
+        int num5 = destination.x > this.x ? 1 : -1;
+        int num6 = destination.y > this.y ? 1 : -1;
+        int num7 = num0 - num1;
+
+        num0 *= 2;
+        num1 *= 2;
+
+        while(num4 > 0){
+            points.add(getPoint(x, y));
+            if(num7 <= 0){
+                if(num7 == 0){
+                    x += num5;
+                    y += num6;
+                    num4++;
+                } else {
+                    y += num6;
+                    num7 += num0;
+                }
+            }
+        }
+        return points;
+    }
+
     public MapPoint getCellInDirection(DirectionsEnum direction, int step){
         MapPoint mapPoint = null;
 
