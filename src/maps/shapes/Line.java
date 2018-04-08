@@ -64,41 +64,44 @@ public class Line implements IShape{
 
     @Override
     public int[] getCells(int centerCell, MapRecord map) {
+        MapPoint mapPoint = new MapPoint(centerCell);
         List<Integer> list = new ArrayList<Integer>();
-        if(this.minRadius == 0){
-            list.add(centerCell);
-        }
-        List<DirectionsEnum> list2 = this.disabledDirections;
-        if(this.onlyPerpendicular){
-            switch (this.direction){
+
+        for(int i = this.minRadius ; i <= this.radius ; i++){
+            switch(this.direction){
                 case DIRECTION_EAST:
-                    list2.add(DirectionsEnum.DIRECTION_EAST);
-                    break;
-                case DIRECTION_WEST:
-                    list2.add(DirectionsEnum.DIRECTION_WEST);
+                    MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() +i, map, list);
                     break;
                 case DIRECTION_SOUTH_EAST:
-                    list2.add(DirectionsEnum.DIRECTION_SOUTH_EAST);
-                    break;
-                case DIRECTION_NORTH_WEST:
-                    list2.add(DirectionsEnum.DIRECTION_NORTH_WEST);
+                    MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() +i, map, list);
                     break;
                 case DIRECTION_SOUTH:
-                    list2.add(DirectionsEnum.DIRECTION_SOUTH);
-                    break;
-                case DIRECTION_NORTH:
-                    list2.add(DirectionsEnum.DIRECTION_NORTH);
+                    MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() +i, map, list);
                     break;
                 case DIRECTION_SOUTH_WEST:
-                    list2.add(DirectionsEnum.DIRECTION_SOUTH_WEST);
+                    MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() +i, map, list);
+                    break;
+                case DIRECTION_WEST:
+                    MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() +i, map, list);
+                    break;
+                case DIRECTION_NORTH_WEST:
+                    MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() +i, map, list);
+                    break;
+                case DIRECTION_NORTH:
+                    MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() +i, map, list);
                     break;
                 case DIRECTION_NORTH_EAST:
-                    list2.add(DirectionsEnum.DIRECTION_NORTH_EAST);
+                    MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() +i, map, list);
                     break;
             }
         }
-        MapPoint mapPoint = new MapPoint(centerCell);
-        return new int[0];
+
+        int[] array = new int[list.size()];
+        for(int i = 0 ; i < array.length ; i++){
+            array[i] = list.get(i);
+        }
+
+        return array;
     }
 
     public boolean isDiagonal() {

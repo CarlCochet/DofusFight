@@ -145,9 +145,21 @@ public class MapPoint{
         this.y = y;
     }
 
+    private void setFromCoords(){
+        if(!initialized){
+            MapPoint.initializeStaticGrid();
+        }
+        this.cellId = (this.x - this.y) * 14 + this.y + (this.x - this.y) / 2;
+    }
+
     private void setFromCellId(){
         if(!initialized){
             initializeStaticGrid();
+        }
+        if(this.cellId >= 0 && this.cellId <= 560){
+            MapPoint mapPoint = MapPoint.OrthogonalGridReference[this.cellId];
+            this.x = mapPoint.x;
+            this.y = mapPoint.y;
         }
     }
 
@@ -207,6 +219,57 @@ public class MapPoint{
             nearPoints[i] = mapPoints.get(i);
         }
         return nearPoints;
+    }
+
+    public boolean isInMap(){
+        return isInMap(this.x, this.y);
+    }
+
+    public int distanceTo(MapPoint point){
+        return (int)(Math.sqrt((point.x - this.x) * (point.x - this.x) + (point.y - this.y) * (point.y - this.y)));
+    }
+
+    public int distanceToCell(MapPoint point){
+        return (int)(Math.abs(this.x - point.x) + Math.abs(this.y - point.y));
+    }
+
+    public boolean isAdjacentTo(MapPoint point){
+        return distanceToCell(point) == 1;
+    }
+
+    public boolean isInLine(MapPoint point){
+        return point.x == this.x || point.y == this.y;
+    }
+
+    public DirectionsEnum orientationToAdjacent(MapPoint point){
+        Point left = new Point();
+
+        left.setX(point.x > this.x ? 1 : ((point.x < this.x ? -1 : 0)));
+        left.setY(point.y > this.y ? 1 : ((point.y < this.y ? -1 : 0)));
+
+        DirectionsEnum result;
+
+        if(left == MapPoint.vectorRight){
+            result = DirectionsEnum.DIRECTION_EAST;
+        } else if(left == MapPoint.vectorDownRight){
+            result = DirectionsEnum.DIRECTION_SOUTH_EAST;
+        } else if(left == MapPoint.vectorDown){
+            result = DirectionsEnum.DIRECTION_SOUTH;
+        } else if(left == MapPoint.vectorDownLeft){
+            result = DirectionsEnum.DIRECTION_SOUTH_WEST;
+        } else if(left == MapPoint.vectorLeft){
+            result = DirectionsEnum.DIRECTION_WEST;
+        } else if(left == MapPoint.vectorUpLeft){
+            result = DirectionsEnum.DIRECTION_NORTH_WEST;
+        } else if(left == MapPoint.vectorUp){
+            result = DirectionsEnum.DIRECTION_NORTH;
+        } else if(left == MapPoint.vectorUpRight){
+            result = DirectionsEnum.DIRECTION_NORTH_EAST;
+        } else {
+            result = DirectionsEnum.DIRECTION_EAST;
+        }
+
+        return result;
     }
 
     public DirectionsEnum orientationTo(MapPoint point, boolean diagonal){
@@ -328,8 +391,6 @@ public class MapPoint{
 
     }
 
-
-
     public MapPoint[] getCellsOnLineBetween(MapPoint destination){
         List<MapPoint> points = new ArrayList<>();
         DirectionsEnum direction = this.orientationTo(destination, true);
@@ -354,8 +415,27 @@ public class MapPoint{
     }
 
     public MapPoint getCellSymetryByPortal(MapPoint target, MapPoint cellExit){
+        DirectionsEnum dir = orientationTo(target, true);
+        List<DirectionsEnum> dirs = new ArrayList<>();
+        dirs.add(dir);
+        MapPoint lastCell = this;
+        int num = 0;
 
-        return null;
+        while(num < 140){
+            lastCell = lastCell.getCellInDirection(dir, 1);
+            dir = lastCell.orientationTo(target, true);
+            if(lastCell.cellId == target.cellId){
+                break;
+            }
+            dirs.add(dir);
+            num++;
+        }
+        lastCell = cellExit;
+        for (DirectionsEnum item : dirs) {
+            lastCell = lastCell.getCellInDirection(item, 1);
+        }
+
+        return lastCell;
     }
 
     public static int coordToCellId(int x, int y){  // Convert coords to cellid

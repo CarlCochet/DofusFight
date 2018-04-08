@@ -62,11 +62,14 @@ public class Cross implements IShape{
 
     @Override
     public int[] getCells(int centerCell, MapRecord map) {
+
         List<Integer> list = new ArrayList<Integer>();
         if(this.minRadius == 0){
             list.add(centerCell);
         }
+
         List<DirectionsEnum> list2 = this.disabledDirections;
+
         if(this.onlyPerpendicular){
             switch (this.direction){
                 case DIRECTION_EAST:
@@ -95,17 +98,47 @@ public class Cross implements IShape{
                     break;
             }
         }
+
         MapPoint mapPoint = new MapPoint(centerCell);
+
         for(int i = this.radius ; i > 0 ; i--){
             if(i >= this.minRadius){
                 if(!this.diagonal){
                     if(!list2.contains(DirectionsEnum.DIRECTION_SOUTH_EAST)){
                         MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY(), map, list);
                     }
+                    if(!list2.contains(DirectionsEnum.DIRECTION_NORTH_WEST)){
+                        MapPoint.addCellIfValid(mapPoint.getX() - i, mapPoint.getY(), map, list);
+                    }
+                    if(!list2.contains(DirectionsEnum.DIRECTION_NORTH_EAST)){
+                        MapPoint.addCellIfValid(mapPoint.getX(), mapPoint.getY() + i, map, list);
+                    }
+                    if(!list2.contains(DirectionsEnum.DIRECTION_SOUTH_WEST)){
+                        MapPoint.addCellIfValid(mapPoint.getX(), mapPoint.getY() - i, map, list);
+                    }
+                }
+                if(!this.diagonal || this.allDirections){
+                    if(!list2.contains(DirectionsEnum.DIRECTION_SOUTH)){
+                        MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() - i, map, list);
+                    }
+                    if(!list2.contains(DirectionsEnum.DIRECTION_NORTH)){
+                        MapPoint.addCellIfValid(mapPoint.getX() - i, mapPoint.getY() + i, map, list);
+                    }
+                    if(!list2.contains(DirectionsEnum.DIRECTION_EAST)){
+                        MapPoint.addCellIfValid(mapPoint.getX() + i, mapPoint.getY() + i, map, list);
+                    }
+                    if(!list2.contains(DirectionsEnum.DIRECTION_WEST)){
+                        MapPoint.addCellIfValid(mapPoint.getX() - i, mapPoint.getY() - i, map, list);
+                    }
                 }
             }
         }
-        return new int[0];
+        int[] array = new int[list.size()];
+        for(int i = 0 ; i < array.length ; i++){
+            array[i] = list.get(i);
+        }
+
+        return array;
     }
 
 
