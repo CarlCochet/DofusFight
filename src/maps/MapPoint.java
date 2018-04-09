@@ -391,6 +391,15 @@ public class MapPoint{
 
     }
 
+    public MapPoint[] getCellsInDirection(DirectionsEnum direction, int range){
+        MapPoint[] points = new MapPoint[range];
+
+        for(int i = 1 ; i < range + 1 ; i++){
+            points[i - 1] = this.getCellInDirection(direction, i);
+        }
+        return points;
+    }
+
     public MapPoint[] getCellsOnLineBetween(MapPoint destination){
         List<MapPoint> points = new ArrayList<>();
         DirectionsEnum direction = this.orientationTo(destination, true);
