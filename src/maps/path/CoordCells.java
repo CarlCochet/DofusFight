@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoordCells {
-    public static List<CellData> cells1 = new ArrayList<>();
     public static BetterArrayList<CellData> cells = new BetterArrayList<>();
 
     public static CellData getCell(int id){
@@ -32,6 +31,16 @@ public class CoordCells {
                 data[0]++;
                 data[1]++;
             }
+        }
+    }
+
+    private static void SearNeighbors(){
+        for (CellData cell : cells) {
+            BetterArrayList<CellData> auxCells = new BetterArrayList<>();
+            List<CellData> cells2 = cells.where(x -> (x.x == cell.x - 1 && x.y == cell.y) || (x.x == cell.x + 1 && x.y == cell.y) || (x.x == cell.x - 1 && x.y == cell.y) || (x.x == cell.x + 1 && x.y == cell.y));
+            cell.line = cells2;
+            cells2 = cells.where(x -> (x.x == cell.x - 1 && x.y == cell.y - 1) || (x.x == cell.x - 1 && x.y == cell.y + 1) || (x.x == cell.x + 1 && x.y == cell.y - 1) || (x.x == cell.x + 1 && x.y == cell.y + 1));
+            cell.diagonal = cells2;
         }
     }
 
