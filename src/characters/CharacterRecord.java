@@ -46,6 +46,8 @@ public class CharacterRecord {
         return null;
     }
 
+
+
     public static List<CharacterRecord> getCharacters() {
         return characters;
     }
